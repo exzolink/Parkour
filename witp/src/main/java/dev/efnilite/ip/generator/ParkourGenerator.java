@@ -746,17 +746,19 @@ public class ParkourGenerator {
     /**
      * Calculates a score between 0 (inclusive) and 1 (inclusive) to determine how difficult it was for
      * the player to achieve this score using their settings.
+     * @return 
      */
     public double getDifficultyScore() {
         double score = 0;
+        double schematicDifficulty = profile.get("schematicDifficulty").asDouble();
 
         if (profile.get("useSpecialBlocks").asBoolean()) score += 0.5;
         
-        if (profile.get("schematicDifficulty").asDouble() > 0) {
-            if (profile.get("schematicDifficulty").asDouble() <= 0.25) score += 0.2;
-            if (profile.get("schematicDifficulty").asDouble() <= 0.5) score += 0.3;
-            if (profile.get("schematicDifficulty").asDouble() <= 0.75) score += 0.4;
-            if (profile.get("schematicDifficulty").asDouble() <= 1.0) score += 0.5;
+        if (schematicDifficulty > 0) {
+            if (schematicDifficulty <= 0.25) score += 0.2;
+            if (schematicDifficulty <= 0.5) score += 0.3;
+            if (schematicDifficulty <= 0.75) score += 0.4;
+            if (schematicDifficulty <= 1.0) score += 0.5;
         }
         
         return score;
