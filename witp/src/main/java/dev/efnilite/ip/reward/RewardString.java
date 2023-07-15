@@ -65,7 +65,10 @@ public record RewardString(@NotNull String string) {
                 IP.logging().stack("Error while trying to process Vault reward", "check your rewards file for incorrect numbers", ex);
             }
         } else {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), this.string);
+            String stringCmd = this.string;
+            stringCmd = stringCmd.replaceAll("%player%", player.getName());
+            stringCmd = stringCmd.replaceFirst("/", "");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), stringCmd);
         }
     }
 }
