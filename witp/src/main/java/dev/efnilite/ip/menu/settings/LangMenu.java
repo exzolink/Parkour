@@ -38,8 +38,8 @@ public class LangMenu {
         }
 
         style.displayRows(0, 1).addToDisplay(items)
-                .nextPage(26, new Item(Material.LIME_DYE, "<#0DCB07><bold>»").click(event -> style.page(1)))
-                .prevPage(18, new Item(Material.RED_DYE, "<#DE1F1F><bold>«").click(event -> style.page(-1)))
+                .nextPage(26, new Item(Material.PAPER, "<#0DCB07>Следующая страница").click(event -> style.page(1)))
+                .prevPage(18, new Item(Material.PAPER, "<#DE1F1F>Предыдущая страница").click(event -> style.page(-1)))
                 .item(22, Locales.getItem(user.locale, "other.close").click(event -> Menus.SETTINGS.open(event.getPlayer())))
                 .fillBackground(Util.isBedrockPlayer(user.player) ? Material.AIR : Material.LIGHT_BLUE_STAINED_GLASS_PANE)
                 .open(user.player);
