@@ -48,7 +48,8 @@ public class Leaderboard {
     }
 
     /**
-     * Writes all scores to the leaderboard file associated with this leaderboard
+     * Writes all scores to the leaderboard file associated with this
+     * leaderboard
      */
     public void write(boolean async) {
         run(() -> IP.getStorage().writeScores(mode, scores), async);
@@ -80,10 +81,13 @@ public class Leaderboard {
 
         scores.entrySet().stream()
                 .sorted((one, two) -> switch (sort) {
-                    case SCORE -> two.getValue().score() - one.getValue().score();
-                    case TIME -> two.getValue().getTimeMillis() - one.getValue().getTimeMillis();
-                    case DIFFICULTY -> (int) Math.signum(Double.parseDouble(two.getValue().difficulty()) - Double.parseDouble(one.getValue().difficulty()));
-                })
+            case SCORE ->
+                two.getValue().score() - one.getValue().score();
+            case TIME ->
+                two.getValue().getTimeMillis() - one.getValue().getTimeMillis();
+            case DIFFICULTY ->
+                (int) Math.signum(Double.parseDouble(two.getValue().difficulty()) - Double.parseDouble(one.getValue().difficulty()));
+        })
                 .forEachOrdered(entry -> sorted.put(entry.getKey(), entry.getValue()));
 
         scores.clear();
@@ -93,7 +97,7 @@ public class Leaderboard {
     /**
      * Registers a new score, overriding the old one
      *
-     * @param uuid  The player's uuid
+     * @param uuid The player's uuid
      * @param score The {@link Score} instance associated with a player's run
      * @return the previous score, if there was one
      */
@@ -121,12 +125,16 @@ public class Leaderboard {
      * Resets all registered scores for this mode
      */
     public void resetAll() {
-        new HashSet<>(scores.keySet()).forEach(this::remove);
+        run(() -> {
+            new HashSet<>(scores.keySet()).forEach(this::remove);
+            IP.getStorage().resetScores(mode);
+        }, true);
     }
 
     /**
      * @param uuid The {@link UUID} to get.
-     * @return The {@link Score} associated with the player. If null, returns a {@link Score} instance with "?".
+     * @return The {@link Score} associated with the player. If null, returns a
+     * {@link Score} instance with "?".
      */
     @NotNull
     public Score get(@NotNull UUID uuid) {
@@ -142,8 +150,7 @@ public class Leaderboard {
     }
 
     /**
-     * Gets the score at a specified rank.
-     * Ranks start at 1.
+     * Gets the score at a specified rank. Ranks start at 1.
      *
      * @param rank The rank
      * @return the {@link Score} instance, null if one isn't found

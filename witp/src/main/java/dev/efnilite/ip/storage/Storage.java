@@ -44,6 +44,13 @@ public interface Storage {
     void writeScores(@NotNull String mode, @NotNull Map<UUID, Score> scores);
 
     /**
+     * Reset scores.
+     *
+     * @param mode   The mode.
+     */
+    void resetScores(@NotNull String mode);
+    
+    /**
      * Reads player data and applies changes.
      *
      * @param player The player.

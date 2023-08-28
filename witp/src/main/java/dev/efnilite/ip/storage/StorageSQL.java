@@ -74,6 +74,7 @@ public final class StorageSQL implements Storage {
                         results.getInt("score")));
             }
 
+            results.close();
             return scores;
         } catch (SQLException ex) {
             IP.logging().stack("Error while trying to read SQL data of %s".formatted(mode), ex);
@@ -96,6 +97,15 @@ public final class StorageSQL implements Storage {
                 .formatted(getTableName(mode), uuid.toString(), score.name(), score.time(), score.difficulty(), score.score(),
                         score.name(), score.time(), score.difficulty(), score.score())));
     }
+    
+    @Override
+    public void resetScores(@NotNull String mode) {
+        sendUpdate(
+        """
+        DELETE FROM `%s`
+        """
+        .formatted(getTableName(mode)));
+    }
 
     // returns leaderboard table name
     private String getTableName(String mode) {
@@ -112,6 +122,7 @@ public final class StorageSQL implements Storage {
 
             if (results == null) {
                 player.setSettings(new HashMap<>());
+                results.close();
                 return;
             }
 
@@ -119,6 +130,7 @@ public final class StorageSQL implements Storage {
 
             if (!hasNext) {
                 player.setSettings(new HashMap<>());
+                results.close();
                 return;
             }
 
@@ -132,6 +144,7 @@ public final class StorageSQL implements Storage {
             }).get();
 
             player.setSettings(settings);
+            results.close();
         } catch (SQLException ex) {
             IP.logging().stack("Error while trying to read SQL data of %s".formatted(player.getName()), ex);
         }
@@ -239,6 +252,7 @@ public final class StorageSQL implements Storage {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
+            statement.close();
         } catch (SQLException ex) {
             IP.logging().stack("Error while sending query %s".formatted(sql), ex);
         }
@@ -250,8 +264,7 @@ public final class StorageSQL implements Storage {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
-        } catch (SQLException ignored) {
-
-        }
+            statement.close();
+        } catch (SQLException ignored) {}
     }
 }

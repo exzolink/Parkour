@@ -75,6 +75,11 @@ public final class StorageDisk implements Storage {
             IP.logging().stack("Error while trying to write to leaderboard file %s".formatted(mode), ex);
         }
     }
+    
+    @Override
+    public void resetScores(@NotNull String mode) {
+        // nothing to see here...
+    }
 
     private File getLeaderboardFile(String mode) {
         return IP.getInFolder("leaderboards/%s.json".formatted(mode.toLowerCase()));
