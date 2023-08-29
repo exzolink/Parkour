@@ -53,7 +53,7 @@ public class LeaderboardsMenu {
                 .nextPage(26, new Item(Material.PAPER, "<#0DCB07>Следующая страница").click(event -> menu.page(1)))
                 .prevPage(18, new Item(Material.PAPER, "<#DE1F1F>Предыдущая страница").click(event -> menu.page(-1)))
                 .item(22, Locales.getItem(player, "other.close").click(event -> Menus.COMMUNITY.open(event.getPlayer())))
-                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.WHITE_STAINED_GLASS_PANE)
+                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.GRAY_STAINED_GLASS_PANE)
                 .open(player);
     }
 }

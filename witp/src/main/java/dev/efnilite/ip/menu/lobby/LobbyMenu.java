@@ -77,7 +77,7 @@ public class LobbyMenu extends DynamicMenu {
      */
     public void open(Player player) {
         display(player, new Menu(3, Locales.getString(player, "lobby.name"))
-                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.WHITE_STAINED_GLASS_PANE)
+                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.GRAY_STAINED_GLASS_PANE)
                 .animation(new SplitMiddleInAnimation())
                 .distributeRowsEvenly());
     }

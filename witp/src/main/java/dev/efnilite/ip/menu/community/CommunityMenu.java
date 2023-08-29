@@ -24,6 +24,6 @@ public class CommunityMenu extends DynamicMenu {
         display(player, new Menu(3, Locales.getString(player, "community.name"))
                 .distributeRowsEvenly()
                 .animation(new WaveWestAnimation())
-                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.LIGHT_GRAY_STAINED_GLASS_PANE));
+                .fillBackground(Util.isBedrockPlayer(player) ? Material.AIR : Material.GRAY_STAINED_GLASS_PANE));
     }
 }

@@ -57,15 +57,15 @@ public class SingleLeaderboardMenu {
 
             Item item = base.clone().material(Material.PLAYER_HEAD)
                     .modifyName(name -> name.replace("%r", Integer.toString(rank))
-                            .replace("%s", Integer.toString(score.score()))
-                            .replace("%p", score.name())
-                            .replace("%t", score.time())
-                            .replace("%d", score.difficulty()))
+                    .replace("%s", Integer.toString(score.score()))
+                    .replace("%p", score.name())
+                    .replace("%t", score.time())
+                    .replace("%d", score.difficulty()))
                     .modifyLore(line -> line.replace("%r", Integer.toString(rank))
-                            .replace("%s", Integer.toString(score.score()))
-                            .replace("%p", score.name())
-                            .replace("%t", score.time())
-                            .replace("%d", score.difficulty()));
+                    .replace("%s", Integer.toString(score.score()))
+                    .replace("%p", score.name())
+                    .replace("%t", score.time())
+                    .replace("%d", score.difficulty()));
 
             // Player head gathering
             ItemStack stack = item.build();
@@ -102,16 +102,22 @@ public class SingleLeaderboardMenu {
         }
 
         String name = switch (sort) {
-            case SCORE -> values.get(0);
-            case TIME -> values.get(1);
-            case DIFFICULTY -> values.get(2);
+            case SCORE ->
+                values.get(0);
+            case TIME ->
+                values.get(1);
+            case DIFFICULTY ->
+                values.get(2);
         };
 
         // get next sorting type
         Sort next = switch (sort) {
-            case SCORE -> Sort.TIME;
-            case TIME -> Sort.DIFFICULTY;
-            default -> Sort.SCORE;
+            case SCORE ->
+                Sort.TIME;
+            case TIME ->
+                Sort.DIFFICULTY;
+            default ->
+                Sort.SCORE;
         };
 
         menu.displayRows(0, 1)
@@ -135,25 +141,25 @@ public class SingleLeaderboardMenu {
             @Override
             Map<UUID, Score> sort(Map<UUID, Score> scores) {
                 return scores.entrySet().stream().sorted((o1, o2) -> {
-                            long one = o1.getValue().getTimeMillis();
-                            long two = o2.getValue().getTimeMillis();
+                    long one = o1.getValue().getTimeMillis();
+                    long two = o2.getValue().getTimeMillis();
 
-                            return Math.toIntExact(one - two); // natural order (lower == better)
-                        }) // reverse natural order
+                    return Math.toIntExact(one - two); // natural order (lower == better)
+                }) // reverse natural order
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
             }
         }, DIFFICULTY {
             @Override
             Map<UUID, Score> sort(Map<UUID, Score> scores) {
                 return scores.entrySet().stream().sorted((o1, o2) -> {
-                            String first = o1.getValue().difficulty();
-                            String second = o2.getValue().difficulty();
+                    String first = o1.getValue().difficulty();
+                    String second = o2.getValue().difficulty();
 
-                            double one = Double.parseDouble(first.equals("?") ? "1.0" : first);
-                            double two = Double.parseDouble(second.equals("?") ? "1.0" : second);
+                    double one = Double.parseDouble(first.equals("?") ? "0.0" : first);
+                    double two = Double.parseDouble(second.equals("?") ? "0.0" : second);
 
-                            return (int) (100 * (two - one)); // reverse natural order (higher == better)
-                        }) // reverse natural order
+                    return (int) (100 * (two - one)); // reverse natural order (higher == better)
+                }) // reverse natural order
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
             }
         };

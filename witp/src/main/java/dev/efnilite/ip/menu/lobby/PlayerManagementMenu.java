@@ -46,7 +46,7 @@ public class PlayerManagementMenu {
                 .prevPage(18, new Item(Material.PAPER, "<#DE1F1F>Предыдущая страница").click(event -> menu.page(-1)))
                 .nextPage(26, new Item(Material.PAPER, "<#0DCB07>Следующая страница").click(event -> menu.page(1)))
                 .item(22, Locales.getItem(viewer.locale, "other.close").click(event -> Menus.LOBBY.open(event.getPlayer())))
-                .fillBackground(Util.isBedrockPlayer(p) ? Material.AIR : Material.LIGHT_GRAY_STAINED_GLASS_PANE)
+                .fillBackground(Util.isBedrockPlayer(p) ? Material.AIR : Material.GRAY_STAINED_GLASS_PANE)
                 .open(p);
     }
 

@@ -162,6 +162,7 @@ settings:
         divider: "<dark_gray><strikethrough>-----------------------------------"
         score: "<#80C7FD><bold>Score <reset><white>%s"
         time: "<#80C7FD><bold>Time <reset><white>%s"
+        difficulty: <#80C7FD>Difficulty <reset><white>%s
         high_score: "<#80C7FD><bold>High-score <reset><white>%s"
 
         formats:

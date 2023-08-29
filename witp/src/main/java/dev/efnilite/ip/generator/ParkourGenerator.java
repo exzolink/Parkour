@@ -147,7 +147,8 @@ public class ParkourGenerator {
     public final Map<BlockData, Double> specialChances = new HashMap<>();
 
     /**
-     * The chances of default jump types: schematic, 'special' (ice, etc.) or normal
+     * The chances of default jump types: schematic, 'special' (ice, etc.) or
+     * normal
      */
     public final Map<JumpType, Double> defaultChances = new HashMap<>();
 
@@ -173,15 +174,16 @@ public class ParkourGenerator {
     protected int lastPositionIndexPlayer = -1;
 
     /**
-     * The history of generated blocks. The most recently generated block is the last item in the list.
+     * The history of generated blocks. The most recently generated block is the
+     * last item in the list.
      */
     protected List<Block> history = new ArrayList<>();
 
     /**
      * Creates a new ParkourGenerator instance
      *
-     * @param session          The session.
-     * @param schematic        The schematic to use for the spawn island.
+     * @param session The session.
+     * @param schematic The schematic to use for the spawn island.
      * @param generatorOptions The options.
      */
     public ParkourGenerator(@NotNull Session session, @Nullable Schematic schematic, GeneratorOption... generatorOptions) {
@@ -198,7 +200,7 @@ public class ParkourGenerator {
     /**
      * Creates a new ParkourGenerator instance.
      *
-     * @param session          The session.
+     * @param session The session.
      * @param generatorOptions The options.
      */
     public ParkourGenerator(@NotNull Session session, GeneratorOption... generatorOptions) {
@@ -206,13 +208,15 @@ public class ParkourGenerator {
     }
 
     /**
-     * Ensures generator preferences in profile can't be overridden by the player changing settings.
+     * Ensures generator preferences in profile can't be overridden by the
+     * player changing settings.
      */
-    public void overrideProfile() { }
+    public void overrideProfile() {
+    }
 
     /**
-     * Calculates all chances for every variable.
-     * Modification is possible in the generator constructor or through external map changes.
+     * Calculates all chances for every variable. Modification is possible in
+     * the generator constructor or through external map changes.
      */
     protected void calculateChances() {
         defaultChances.clear();
@@ -257,9 +261,12 @@ public class ParkourGenerator {
 
         // display particle
         switch (Option.PARTICLE_SHAPE) {
-            case DOT -> Particles.draw(center.add(0.5, 1, 0.5), data.speed(0.4).size(20).offsetX(0.5).offsetY(1).offsetZ(0.5));
-            case CIRCLE -> Particles.circle(center.add(0.5, 0.5, 0.5), data.size(5), (int) Math.sqrt(blocks.size()), 20);
-            case BOX -> Particles.box(BoundingBox.of(max, min), player.player.getWorld(), data.size(1), 0.2);
+            case DOT ->
+                Particles.draw(center.add(0.5, 1, 0.5), data.speed(0.4).size(20).offsetX(0.5).offsetY(1).offsetZ(0.5));
+            case CIRCLE ->
+                Particles.circle(center.add(0.5, 0.5, 0.5), data.size(5), (int) Math.sqrt(blocks.size()), 20);
+            case BOX ->
+                Particles.box(BoundingBox.of(max, min), player.player.getWorld(), data.size(1), 0.2);
         }
     }
 
@@ -317,8 +324,10 @@ public class ParkourGenerator {
 
         // ensure special is possible
         switch (getLatest().getType()) {
-            case SMOOTH_QUARTZ_SLAB -> height = Math.min(height, 0);
-            case GLASS_PANE -> distance = Math.min(distance, 3);
+            case SMOOTH_QUARTZ_SLAB ->
+                height = Math.min(height, 0);
+            case GLASS_PANE ->
+                distance = Math.min(distance, 3);
         }
 
         if (height > 0) {
@@ -383,9 +392,9 @@ public class ParkourGenerator {
 
     public void startTick() {
         task = Task.create(IP.getPlugin())
-            .repeat(generatorOptions.contains(GeneratorOption.INCREASED_TICK_ACCURACY) ? 1 : Option.GENERATOR_CHECK)
-            .execute(this::tick)
-            .run();
+                .repeat(generatorOptions.contains(GeneratorOption.INCREASED_TICK_ACCURACY) ? 1 : Option.GENERATOR_CHECK)
+                .execute(this::tick)
+                .run();
     }
 
     /**
@@ -483,7 +492,8 @@ public class ParkourGenerator {
     }
 
     /**
-     * Resets the parkour. If regenerate is false, this generator is stopped and the island is destroyed.
+     * Resets the parkour. If regenerate is false, this generator is stopped and
+     * the island is destroyed.
      *
      * @param regenerate True if parkour should regenerate, false if not.
      */
@@ -509,34 +519,44 @@ public class ParkourGenerator {
 
         Leaderboard leaderboard = getMode().getLeaderboard();
         int record = leaderboard != null ? leaderboard.get(player.getUUID()).score() : 0;
+        double prevDifficulty = leaderboard != null ? !leaderboard.get(player.getUUID()).difficulty().equals("?") ? Double.parseDouble(leaderboard.get(player.getUUID()).difficulty()) : 0 : 0;
+        double difficulty = getDifficultyScore();
         String time = getTime();
 
         if (profile.get("showFallMessage").asBoolean()) {
             String message;
             int number = 0;
 
-            if (score == record) {
-                message = "settings.parkour_settings.items.fall_message.formats.tied";
-            } else if (score > record) {
-                number = score - record;
-                message = "settings.parkour_settings.items.fall_message.formats.beat";
+            if (difficulty <= prevDifficulty) {
+                if (score == record) {
+                    message = "settings.parkour_settings.items.fall_message.formats.tied";
+                } else if (score > record) {
+                    number = score - record;
+                    message = "settings.parkour_settings.items.fall_message.formats.beat";
+                } else {
+                    number = record - score;
+                    message = "settings.parkour_settings.items.fall_message.formats.miss";
+                }
             } else {
-                number = record - score;
-                message = "settings.parkour_settings.items.fall_message.formats.miss";
+                number = score;
+                message = "settings.parkour_settings.items.fall_message.formats.beat";
             }
 
             for (ParkourPlayer players : getPlayers()) {
                 players.sendTranslated("settings.parkour_settings.items.fall_message.divider");
                 players.sendTranslated("settings.parkour_settings.items.fall_message.score", Integer.toString(score));
                 players.sendTranslated("settings.parkour_settings.items.fall_message.time", time);
-                players.sendTranslated("settings.parkour_settings.items.fall_message.high_score", Integer.toString(record));
+                players.sendTranslated("settings.parkour_settings.items.fall_message.difficulty", difficulty);
+                if (difficulty <= prevDifficulty) {
+                    players.sendTranslated("settings.parkour_settings.items.fall_message.high_score", Integer.toString(record));
+                }
                 players.sendTranslated(message, Integer.toString(number));
                 players.sendTranslated("settings.parkour_settings.items.fall_message.divider");
             }
         }
 
-        if (leaderboard != null && score > record) {
-            registerScore(getTime(), Double.toString(getDifficultyScore()).substring(0, 3), score);
+        if (score > record || difficulty > prevDifficulty) {
+            registerScore(getTime(), Double.toString(difficulty).substring(0, 3), score);
         }
 
         score = 0;
@@ -551,7 +571,7 @@ public class ParkourGenerator {
 
         island.destroy();
 
-        if (getPlayers().size() == 0) {
+        if (getPlayers().isEmpty()) {
             getSpectators().forEach(spectator -> Modes.DEFAULT.create(spectator.player));
         }
     }
@@ -563,7 +583,7 @@ public class ParkourGenerator {
             return;
         }
 
-        getPlayers().forEach(player -> leaderboard.put(player.getUUID(), new Score(player.getName(), time, difficulty, score)));
+        getPlayers().forEach(p -> leaderboard.put(p.getUUID(), new Score(p.getName(), time, difficulty, score)));
     }
 
     private void deleteSchematic() {
@@ -650,7 +670,8 @@ public class ParkourGenerator {
         schematicCooldown--;
     }
 
-    private @NotNull List<Block> rotatedPaste(Schematic schematic, Location location) {
+    private @NotNull
+    List<Block> rotatedPaste(Schematic schematic, Location location) {
         if (schematic == null || location == null) {
             return Collections.emptyList();
         }
@@ -710,7 +731,7 @@ public class ParkourGenerator {
     private double getDifficulty(String fileName) {
         String path = "difficulty.%s".formatted(fileName.split("[-.]")[1]);
 
-        if (!Config.SCHEMATICS.isPath(path))  {
+        if (!Config.SCHEMATICS.isPath(path)) {
             return 1.0; // todo remove
         }
 
@@ -744,16 +765,20 @@ public class ParkourGenerator {
     }
 
     /**
-     * Calculates a score between 0 (inclusive) and 1 (inclusive) to determine how difficult it was for
-     * the player to achieve this score using their settings.
-     * @return 
+     * Calculates a score between 0 (inclusive) and 1 (inclusive) to determine
+     * how difficult it was for the player to achieve this score using their
+     * settings.
+     *
+     * @return
      */
     public double getDifficultyScore() {
         double score = 0;
         double schematicDifficulty = profile.get("schematicDifficulty").asDouble();
 
-        if (profile.get("useSpecialBlocks").asBoolean()) score += 0.5;
-        
+        if (profile.get("useSpecialBlocks").asBoolean()) {
+            score += 0.5;
+        }
+
         if (schematicDifficulty > 0) {
             if (schematicDifficulty <= 0.25) {
                 score += 0.2;
@@ -765,7 +790,7 @@ public class ParkourGenerator {
                 score += 0.5;
             }
         }
-        
+
         return score;
     }
 

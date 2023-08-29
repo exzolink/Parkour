@@ -50,6 +50,8 @@ public class Leaderboard {
     /**
      * Writes all scores to the leaderboard file associated with this
      * leaderboard
+     *
+     * @param async
      */
     public void write(boolean async) {
         run(() -> IP.getStorage().writeScores(mode, scores), async);
@@ -57,6 +59,8 @@ public class Leaderboard {
 
     /**
      * Reads all scores from the leaderboard file
+     *
+     * @param async
      */
     public void read(boolean async) {
         run(() -> {
